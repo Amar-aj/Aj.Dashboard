@@ -1,6 +1,9 @@
 ﻿
 
 using BlazorAppDashboard.Services.ApiServices;
+using BlazorAppDashboard.Services.Common;
+using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
@@ -14,16 +17,18 @@ namespace BlazorAppDashboard.Services
         public static IServiceCollection AddClientServices(this IServiceCollection services, IConfiguration config) =>
          services.AutoRegisterInterfaces<IAppService>()
 
-
+            .AddBlazoredLocalStorage()
             .AddHttpClient(ClientName, client =>
          {
              client.DefaultRequestHeaders.AcceptLanguage.Clear();
              client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName);
              client.BaseAddress = new Uri(config["BackendApiBaseUrl"]);
          })
-                //.AddAuthenticationHandler(config)
+          //.AddAuthenticationHandler(config)
           .Services
-            .AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(ClientName));
+            .AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(ClientName))
+
+            /*.AddAuthorizationCore().AddScoped<CustomAuthStateProvider>().AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<CustomAuthStateProvider>())*/;
 
 
 
@@ -66,5 +71,5 @@ namespace BlazorAppDashboard.Services
 
 
 
-   
+
 }

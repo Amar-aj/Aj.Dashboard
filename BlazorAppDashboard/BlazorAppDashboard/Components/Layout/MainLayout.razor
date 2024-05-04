@@ -1,17 +1,34 @@
-﻿@inherits LayoutComponentBase
+﻿@using BlazorAppDashboard.Services
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@inject BaseUrlProvider BaseUrlProvider
+
 <RadzenNotification @rendermode="@RenderMode.InteractiveServer" />
 <RadzenDialog @rendermode="@RenderMode.InteractiveServer" />
 <RadzenContextMenu @rendermode="@RenderMode.InteractiveServer" />
 <RadzenTooltip @rendermode="@RenderMode.InteractiveServer" />
 
 
+<AuthorizeView>
+    <NotAuthorized>
+        <RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
+            @* <NavMenu/> *@
+            <RadzenBody>
+                <div class="rz-p-4 h-100 w-100">
+                    @Body
+                </div>
+            </RadzenBody>
+        </RadzenLayout>
 
-<RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
-    @* <NavMenu/> *@
-    <RadzenBody >
-        <div class="rz-p-4 h-100 w-100">
-            @Body
-        </div>
-    </RadzenBody>
-</RadzenLayout>
+    </NotAuthorized>
+    <Authorized>
+    </Authorized>
+</AuthorizeView>
 
+@code {
+    protected override Task OnInitializedAsync()
+    {
+        BaseUrlProvider.SetBaseUrl(NavigationManager.BaseUri);
+        return base.OnInitializedAsync();
+    }
+}
