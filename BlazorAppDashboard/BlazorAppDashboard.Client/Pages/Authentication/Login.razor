@@ -1,0 +1,55 @@
+﻿@page "/login"
+@using BlazorAppDashboard.Services.ApiServices
+@using BlazorAppDashboard.Services.Models
+@* @rendermode @(new InteractiveWebAssemblyRenderMode(prerender:false)) *@
+@* @rendermode InteractiveWebAssembly *@
+@inject HttpClient Http
+@* @attribute [StreamRendering] *@
+
+@inject IAuth IAuth
+
+
+<RadzenStack  AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="4px" class="h-100 w-100">
+    <RadzenCard Class="rz-my-12 rz-mx-auto">
+        <RadzenStack AlignItems="AlignItems.Center" Class="rz-mx-auto rz-my-12">
+            <RadzenImage Path="images/owl.svg" Style="width: 10rem;" AlternateText="community" />
+        </RadzenStack>
+        <RadzenText TextStyle="TextStyle.H6">
+            <strong>
+                <hr />
+            </strong>
+        </RadzenText>
+        <RadzenTemplateForm class="mt-1" TItem="LoginRequest" Data=@request Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Email</RadzenText>
+            <RadzenTextBox @bind-Value=@request.Email Name="Email" Placeholder="Enter Email" class="w-100" aria-label="enter Email" />
+            <RadzenRequiredValidator Component="Email" Text="Email is required" Style="position: absolute" />
+            <RadzenEmailValidator Component="Email" Text="Provide a valid email address" Style="position: absolute" />
+
+            <RadzenText class="mt-4" TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Password</RadzenText>
+            <RadzenPassword @bind-Value=@request.Password Name="Password" Placeholder="Enter password" class="w-100" aria-label="enter password" />
+            <RadzenRequiredValidator Component="Password" Text="Password is required" Style="position: absolute" />
+
+            <RadzenButton class="mt-4 w-100" ButtonType="ButtonType.Submit" Text="Submit"></RadzenButton>
+        </RadzenTemplateForm>
+    </RadzenCard>
+</RadzenStack>
+
+
+
+@code {
+    LoginRequest request = new LoginRequest();
+
+    async Task OnSubmit(LoginRequest model)
+    {
+       await IAuth.LoginAsync(model);
+    }
+
+
+
+
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        Console.WriteLine("1");
+        // Log("InvalidSubmit", JsonSerializer.Serialize(args, new JsonSerializerOptions() { WriteIndented = true }));
+    }
+}
