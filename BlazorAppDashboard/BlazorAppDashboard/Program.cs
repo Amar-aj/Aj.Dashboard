@@ -1,11 +1,11 @@
 using BlazorAppDashboard.Client.Pages;
 using BlazorAppDashboard.Components;
 using BlazorAppDashboard.Services;
-using BlazorAppDashboard.Services.Common;
 using Microsoft.AspNetCore.Components.Authorization;
 using Radzen;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authorization;
+using BlazorAppDashboard.Services.Common.Auth;
 
 
 
