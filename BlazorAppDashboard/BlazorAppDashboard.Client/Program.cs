@@ -1,4 +1,5 @@
 using BlazorAppDashboard.Services.Common;
+using BlazorAppDashboard.Services.Common.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
@@ -6,9 +7,9 @@ using Radzen;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddRadzenComponents();
 
-//builder.Services.AddAuthorizationCore();
-//builder.Services.AddCascadingAuthenticationState();
-//builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
 //builder.Services.AddScoped<HostingEnvironmentService>();
 
 //builder.Services

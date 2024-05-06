@@ -22,6 +22,7 @@
         <RadzenTemplateForm class="mt-1" TItem="LoginRequest" Data=@request Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Email</RadzenText>
             <RadzenTextBox @bind-Value=@request.Email Name="Email" Placeholder="Enter Email" class="w-100" aria-label="enter Email" />
+            <br />
             <RadzenRequiredValidator Component="Email" Text="Email is required" Style="position: absolute" />
             <RadzenEmailValidator Component="Email" Text="Provide a valid email address" Style="position: absolute" />
 
