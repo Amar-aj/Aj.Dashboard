@@ -1,6 +1,8 @@
 ﻿using BlazorAppDashboard.Services.Common;
+using BlazorAppDashboard.Services.Common.Auth;
 using BlazorAppDashboard.Services.Models;
 using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -14,7 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace BlazorAppDashboard.Services.ApiServices;
-public interface IAuth : IAppService
+public interface IAuth 
 {
     Task LoginAsync(LoginRequest request);
 }
@@ -23,14 +25,16 @@ public class Auth : IAuth
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorage;
     private readonly NotificationService _notificationService;
-    private readonly AuthenticationStateProvider _authStateProvider;
+    private readonly NavigationManager _navigation;
 
-    public Auth(IHttpClientFactory httpClientFactory, ILocalStorageService localStorage, NotificationService notificationService, AuthenticationStateProvider AuthStateProvider)
+
+    public Auth(IHttpClientFactory httpClientFactory, ILocalStorageService localStorage, NotificationService notificationService,
+        NavigationManager navigation)
     {
         _httpClient = httpClientFactory.CreateClient("FullStackHero.API");
         _localStorage = localStorage;
         this._notificationService = notificationService;
-        _authStateProvider = AuthStateProvider;
+        _navigation = navigation;
     }
 
     public async Task LoginAsync(LoginRequest model)
@@ -62,13 +66,15 @@ public class Auth : IAuth
                     await _localStorage.SetItemAsync("token", data.Token);
 
                     Console.WriteLine("Successful login response: " + responseContent); // Or handle data appropriately
-                    _notificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = data.Message, Duration = 4000 });
-                    await _authStateProvider.GetAuthenticationStateAsync();
+                    //await _authenticationService.LoginAsync("", model);
 
+                    //await _authStateProvider.AuthenticateUser();
+                    _notificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = data.Message, Duration = 4000 });
+                    _navigation.NavigateTo("/weather");
                 }
                 else
                 {
-                    _notificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = data.Message,  Duration = 4000 });
+                    _notificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = data.Message, Duration = 4000 });
                 }
                 Console.WriteLine("Successful login response: " + responseContent); // Or handle data appropriately
 

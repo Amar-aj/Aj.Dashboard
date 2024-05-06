@@ -2,6 +2,7 @@
 
 using BlazorAppDashboard.Services.ApiServices;
 using BlazorAppDashboard.Services.Common;
+using BlazorAppDashboard.Services.Common.Auth;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -15,19 +16,25 @@ namespace BlazorAppDashboard.Services
     {
         private const string ClientName = "FullStackHero.API";
         public static IServiceCollection AddClientServices(this IServiceCollection services, IConfiguration config) =>
-         services.AutoRegisterInterfaces<IAppService>()
-
+         services
+            .AddScoped<IAuth, Auth>()
+            .AutoRegisterInterfaces<IAppService>()
             .AddBlazoredLocalStorage()
             .AddHttpClient(ClientName, client =>
-         {
-             client.DefaultRequestHeaders.AcceptLanguage.Clear();
-             client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName);
-             client.BaseAddress = new Uri(config["BackendApiBaseUrl"]);
-         })
-          //.AddAuthenticationHandler(config)
-          .Services
-            .AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(ClientName))
+                 {
+                     client.DefaultRequestHeaders.AcceptLanguage.Clear();
+                     client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName);
+                     client.BaseAddress = new Uri(config["BackendApiBaseUrl"]);
+                 })
+            //.AddAuthenticationHandler(config)
+            .Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(ClientName))
 
+            .AddAuthorizationCore()
+            .AddCascadingAuthenticationState()
+            .AddScoped<AuthenticationStateProvider, PersistentAuthenticationStateProvider>()
+            .AddScoped<IAuthenticationService, PersistentAuthenticationStateProvider>()
+            //.AddScoped(sp => (IAuthenticationService)sp.GetRequiredService<AuthenticationStateProvider>())
+            //.AddScoped(sp => (IAuthenticationService)sp.GetRequiredService<AuthenticationStateProvider>())
             /*.AddAuthorizationCore().AddScoped<CustomAuthStateProvider>().AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<CustomAuthStateProvider>())*/;
 
 

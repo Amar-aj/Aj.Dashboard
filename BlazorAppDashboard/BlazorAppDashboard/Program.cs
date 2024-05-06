@@ -28,7 +28,8 @@ builder.Services.AddClientServices(builder.Configuration);
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
-builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, BlazorAuthorizationMiddlewareResultHandler>();
+builder.Services.AddScoped<IAuthorizationMiddlewareResultHandler, BlazorAuthorizationMiddlewareResultHandler>();
+
 builder.Services.AddScoped<HostingEnvironmentService>();
 builder.Services.AddSingleton<BaseUrlProvider>();
 builder.Services.AddHttpContextAccessor();

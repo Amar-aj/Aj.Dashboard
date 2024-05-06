@@ -7,9 +7,9 @@ using Radzen;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddRadzenComponents();
 
-builder.Services.AddAuthorizationCore();
-builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
+;
+/*builder.Services.AddScoped(sp => (IAuthenticationService)sp.GetRequiredService<AuthenticationStateProvider>())*/;
+
 //builder.Services.AddScoped<HostingEnvironmentService>();
 
 //builder.Services

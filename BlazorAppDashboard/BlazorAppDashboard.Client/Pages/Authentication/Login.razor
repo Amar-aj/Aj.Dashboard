@@ -1,5 +1,6 @@
 ﻿@page "/login"
 @using BlazorAppDashboard.Services.ApiServices
+@using BlazorAppDashboard.Services.Common.Auth
 @using BlazorAppDashboard.Services.Models
 @* @rendermode @(new InteractiveWebAssemblyRenderMode(prerender:false)) *@
 @* @rendermode InteractiveWebAssembly *@
@@ -7,9 +8,10 @@
 @* @attribute [StreamRendering] *@
 
 @inject IAuth IAuth
+
 @attribute [AllowAnonymous]
 
-<RadzenStack  AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="4px" class="h-100 w-100">
+<RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="4px" class="h-100 w-100">
     <RadzenCard Class="rz-my-12 rz-mx-auto">
         <RadzenStack AlignItems="AlignItems.Center" Class="rz-mx-auto rz-my-12">
             <RadzenImage Path="images/owl.svg" Style="width: 10rem;" AlternateText="community" />
@@ -38,11 +40,19 @@
 
 
 @code {
-    LoginRequest request = new LoginRequest();
 
+    [Inject]
+    public IAuthenticationService AuthService { get; set; } = default!;
+
+    LoginRequest request = new LoginRequest();
+    protected override async Task OnInitializedAsync()
+    {
+        request = new LoginRequest() { Email = "aj@gmail.com", Password = "123" };
+    }
     async Task OnSubmit(LoginRequest model)
     {
-      await IAuth.LoginAsync(model);
+        await IAuth.LoginAsync(model);
+        await AuthService.LoginAsync("", model);
     }
 
 
